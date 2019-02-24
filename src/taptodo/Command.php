@@ -1,14 +1,14 @@
 <?php
 namespace taptodo;
 
-
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\Player;
 
 class Command {
-    const AS_CONSOLE_TYPE = 0;
-    const AS_PLAYER_TYPE = 1;
-    const AS_OP_TYPE = 2;
+
+    public const AS_CONSOLE_TYPE = 0;
+    public const AS_PLAYER_TYPE = 1;
+    public const AS_OP_TYPE = 2;
 
     /** @var  mixed */
     private $originalCommand;
@@ -17,13 +17,14 @@ class Command {
     private $executionMode;
     /** @var TapToDo  */
     private $plugin;
+
     public function __construct($command, TapToDo $plugin){
         $this->originalCommand = $command;
         $this->plugin = $plugin;
         $this->compile();
     }
     public function compile(){
-        if($this->executionMode == null) {
+        if ($this->executionMode == null) {
             $this->executionMode = Command::AS_PLAYER_TYPE;
             $this->compiledCommand = $this->originalCommand;
             $this->compiledCommand = str_replace("%safe", "", $this->compiledCommand);
@@ -37,14 +38,25 @@ class Command {
     public function execute(Player $player){
         $command = $this->compiledCommand;
         $type = $this->executionMode;
-
-        $command = str_replace("%p", $player->getName(), $command);
-        $command = str_replace("%x", $player->getX(), $command);
-        $command = str_replace("%y", $player->getY(), $command);
-        $command = str_replace("%z", $player->getZ(), $command);
-        $command = str_replace("%l", $player->getLevel()->getName(), $command);
-        $command = str_replace("%ip", $player->getAddress(), $command);
-        $command = str_replace("%n", $player->getDisplayName(), $command);
+        $symbol = [
+            "%p",
+            "%x",
+            "%y",
+            "%z",
+            "%l",
+            "%ip",
+            "%n",
+        ];
+        $replace = [
+            $player->getName(),
+            $player->getX(),
+            $player->getY(),
+            $player->getZ(),
+            $player->getLevel()->getName(),
+            $player->getAddress(),
+            $player->getDisplayName(),
+        ];
+        $command = str_replace($symbol, $replace, $command);
 
         if($type === Command::AS_OP_TYPE && $player->isOp()) $type = Command::AS_PLAYER_TYPE;
 
@@ -66,14 +78,14 @@ class Command {
     /**
      * @return mixed
      */
-    public function getOriginalCommand(){
+    public function getOriginalCommand() {
         return $this->originalCommand;
     }
 
     /**
      * @return null
      */
-    public function getCompiledCommand(){
+    public function getCompiledCommand() {
         return $this->compiledCommand;
     }
 

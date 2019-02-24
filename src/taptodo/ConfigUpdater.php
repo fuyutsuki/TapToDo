@@ -4,11 +4,16 @@ namespace taptodo;
 use pocketmine\utils\Config;
 
 class ConfigUpdater{
+
+    public const CONFIG_VERSION = 1;
+
     /** @var Config  */
     private $config;
     /** @var TapToDo  */
     private $tapToDo;
-    const CONFIG_VERSION = 1;
+    /** @var int */
+    private $version;
+
     public function __construct(Config $config, TapToDo $tapToDo){
         $this->config = $config;
         $this->tapToDo = $tapToDo;
